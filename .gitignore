@@ -1,0 +1,9 @@
+
+# compiled module
+__pycache__
+
+# sundries
+.DS_Store
+private_key.pem
+backup/
+test.py
