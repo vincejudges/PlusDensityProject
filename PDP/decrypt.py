@@ -25,19 +25,22 @@ def decrypt(ciphertext, encoding=ENCODING):
     return _decrypt(bytes.fromhex(reverse_beautify(ciphertext))).decode(encoding=encoding)
 
 
+def _decrypt_path_check(dir_name):
+    dir_path = os.path.join(ORIGIN_PATH, dir_name)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+
 def decrypt_for_file(file_name, encoding=ENCODING):
     try:
         with open(os.path.join(ENCRYPTED_PATH, file_name), 'r', encoding=encoding) as f:
             encrypted_content = f.read()
+        with open(os.path.join(ORIGIN_PATH, file_name), 'w', encoding=encoding) as f:
+            f.write(decrypt(encrypted_content, encoding=encoding))
     except FileNotFoundError as exception:
         raise Exception('No such file or is a directory')
     except UnicodeDecodeError as exception:
         raise Exception('Unicode decode error')
-    except Exception as exception:
-        raise Exception(exception.__class__.__name__)
-    try:
-        with open(os.path.join(ORIGIN_PATH, file_name), 'w', encoding=encoding) as f:
-            f.write(decrypt(encrypted_content, encoding=encoding))
     except Exception as exception:
         raise Exception(exception.__class__.__name__)
 

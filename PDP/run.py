@@ -12,8 +12,10 @@ from header import os
 from key_generator import generate
 from encrypt import encrypt
 from encrypt import encrypt_for_file
+from encrypt import _encrypt_path_check
 from decrypt import decrypt
 from decrypt import decrypt_for_file
+from decrypt import _decrypt_path_check
 
 
 __all__ = []
@@ -22,10 +24,12 @@ __date__ = '2019/08/08'
 
 
 if __name__ == '__main__':
-    def _file_operation(folder_path_header, operation):
+    def _file_operation(folder_path_header, operation, checker=None):
         counter = [0]
         def _dfs_file_operation(folder_path):
             current_path = os.path.join(folder_path_header, folder_path)
+            if checker is not None:
+                checker(folder_path)
             for file_name in os.listdir(current_path):
                 current_file = os.path.join(folder_path, file_name)
                 if file_name.startswith('.'):
@@ -117,7 +121,7 @@ if __name__ == '__main__':
                     error_shower('Public key unavailable', exist_after_show=False)
                     continue
                 try:
-                    _file_operation(ORIGIN_PATH, encrypt_for_file)
+                    _file_operation(ORIGIN_PATH, encrypt_for_file, _encrypt_path_check)
                 except Exception as exception:
                     error_shower(exception.args, exist_after_show=False)
                     continue
@@ -169,7 +173,7 @@ if __name__ == '__main__':
                     error_shower('Private key unavailable', exist_after_show=False)
                     continue
                 try:
-                    _file_operation(ENCRYPTED_PATH, decrypt_for_file)
+                    _file_operation(ENCRYPTED_PATH, decrypt_for_file, _decrypt_path_check)
                 except Exception as exception:
                     error_shower(exception.args, exist_after_show=False)
                     continue

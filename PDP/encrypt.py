@@ -31,6 +31,12 @@ def encrypt(message, encoding=ENCODING):
     return beautify(_encrypt(message, encoding=encoding).hex()) + '\n'
 
 
+def _encrypt_path_check(dir_name):
+    dir_path = os.path.join(ENCRYPTED_PATH, dir_name)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+
 def encrypt_for_file(file_name, encoding=ENCODING):
     try:
         with open(os.path.join(ORIGIN_PATH, file_name), 'r', encoding=encoding) as f:
